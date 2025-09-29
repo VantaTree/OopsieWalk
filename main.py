@@ -38,7 +38,7 @@ class App:
                     pygame.quit()
                     raise SystemExit
 
-            self.screen.fill("white")
+            self.screen.fill("beige")
             self.game.run()
             self.debug.draw()
 

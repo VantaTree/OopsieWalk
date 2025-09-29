@@ -16,7 +16,7 @@ class Game:
 
         self.ysort_grp = CustomGroup()
         
-        self.player = Player(master, [self.ysort_grp], main_player=True)
+        self.player = Player(master, [self.ysort_grp])
 
     def get_input(self):
         

@@ -9,13 +9,13 @@ if TYPE_CHECKING:
 
 class Entity(pygame.sprite.Sprite):
     
-    def __init__(self, master: "Master", grps, images):
+    def __init__(self, master: "Master", grps, images, pos):
 
         super().__init__(grps)
         self.master = master
         self.screen:pygame.Surface = self.master.app.screen
 
-        self.pos = pygame.Vector2(100, 100)
+        self.pos = pygame.Vector2(pos)
         self.last_pos = self.pos.copy()
         self.vel = pygame.Vector2()
         self.dir = pygame.Vector2(1, 0)
