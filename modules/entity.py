@@ -22,6 +22,8 @@ class Entity(pygame.sprite.Sprite):
 
         self.images:list[pygame.Surface] = images
 
+        self.draw_outline = False
+
         self.rect = self.images[0].get_rect(midbottom=self.pos)
         self.hitbox = pygame.FRect(0, 0, 9, 9)
         self.hitbox.midbottom = self.pos
@@ -44,11 +46,9 @@ class Entity(pygame.sprite.Sprite):
                 colliding = line_line_collide(x1, x2, x3, x4, y1, y2, y3, y4)
 
             if colliding:
-                trail[i].deactivate()
-                trail[i+1].deactivate()
-                return True
+                return (x1+x2)/2, (y1+y2)/2
 
-        return False
+        return None
     
     def draw(self):
 
@@ -76,5 +76,5 @@ class Entity(pygame.sprite.Sprite):
     
     def update(self):
 
-        self.trail_collision_detect()
+        pass
         

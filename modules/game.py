@@ -2,6 +2,7 @@ import pygame
 from .config import *
 from .engine import CustomGroup
 from .player import Player
+from .characters import Biby
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -17,6 +18,7 @@ class Game:
         self.ysort_grp = CustomGroup()
         
         self.player = Player(master, [self.ysort_grp])
+        self.biby = Biby(master, [self.ysort_grp])
 
     def get_input(self):
         
@@ -39,6 +41,8 @@ class Game:
         self.get_input()
 
         self.player.update()
+
+        self.biby.update()
 
     def run(self):
 

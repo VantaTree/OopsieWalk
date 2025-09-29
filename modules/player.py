@@ -49,6 +49,7 @@ class Player(Entity):
         self.trail_sprite = pygame.Surface(self.trail3d_effect.size)
         self.trail_sprite.fill(self.color)
         self.trail_sprite.blit(self.trail3d_effect)
+
         self.wall_sprite = pygame.Surface(self.trail3d_effect.size)
         self.wall_sprite.fill(0xAFAFAF)
         self.wall_sprite.blit(self.trail3d_effect)
@@ -88,9 +89,11 @@ class Player(Entity):
                 w = round(w)
                 h = round(h)
 
+                dir = self.pos - self.last_pos
+
                 # self.trail.append((x, y, w, h))
-                trail = TrailSegment(self.screen, self.trail_sprite, self.wall_sprite,
-                                     x, y, w, h, self.trail_index, [self.master.game.ysort_grp])
+                trail = TrailSegment(self.screen, self.trail_sprite, x, y, w, h,
+                                     dir, self.trail_index, [self.master.game.ysort_grp])
                 self.trail.append(trail)
                 self.trail_index += 1
             self.last_pos = self.pos.copy()
@@ -150,25 +153,16 @@ class Player(Entity):
 
 class TrailSegment(pygame.sprite.Sprite):
 
-    def __init__(self, screen, image, wall_img, x, y, w, h, order, grps):
+    def __init__(self, screen, image, x, y, w, h, dir, order, grps):
         
         super().__init__(grps)
         self.screen:pygame.Surface = screen
-        self.original_img:pygame.Surface = image
         self.image:pygame.Surface = image
-        self.wall_img:pygame.Surface = wall_img
         self.rect = pygame.Rect(x, y, w, h)
+        self.dir:pygame.Vector2 = pygame.Vector2(dir)
         self.order = order
 
         self.deactivated = False
-
-    def deactivate(self):
-        self.deactivated = True
-        self.image = self.wall_img
-
-    def reactivate(self):
-        self.deactivated = False
-        self.image = self.original_img_img
 
     def draw(self):
 
