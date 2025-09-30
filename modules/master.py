@@ -3,6 +3,7 @@ import pygame
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .game import Game
+    from .level import Level
     from .player import Player
     from .debug import Debug
     from ..main import App
@@ -14,6 +15,7 @@ class Master:
         self.app:App
         self.debug:Debug
         self.game:Game
+        self.level:Level
         self.player:Player
 
         self.dt:float = 0

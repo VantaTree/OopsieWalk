@@ -16,7 +16,7 @@ class Biby(Entity):
         images:list[pygame.Surface] = import_spritesheet("graphics/player", "biby-16x16.png")
         images = [pygame.transform.rotate(img, 90) for img in images]
 
-        super().__init__(master, grps, images, (220, 120))
+        super().__init__(master, grps, images)
         self.draw_outline = True
         self.dir = pygame.Vector2(-1, 0)
 
@@ -33,7 +33,7 @@ class Biby(Entity):
         wall_count = 0
         path_dir = 0
 
-        for trail in self.master.player.trail:
+        for trail in self.master.level.trails[0]:
             px, py = trail.rect.midbottom
             if (dis_sq := dist_sq(self.pos.xy, (px, py))) <= 64:
                 wall_count += 1

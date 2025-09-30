@@ -9,13 +9,13 @@ if TYPE_CHECKING:
 
 class Entity(pygame.sprite.Sprite):
     
-    def __init__(self, master: "Master", grps, images, pos):
+    def __init__(self, master: "Master", grps, images):
 
         super().__init__(grps)
         self.master = master
         self.screen:pygame.Surface = self.master.app.screen
 
-        self.pos = pygame.Vector2(pos)
+        self.pos = pygame.Vector2()
         self.last_pos = self.pos.copy()
         self.vel = pygame.Vector2()
         self.dir = pygame.Vector2(1, 0)
@@ -24,8 +24,12 @@ class Entity(pygame.sprite.Sprite):
 
         self.draw_outline = False
 
-        self.rect = self.images[0].get_rect(midbottom=self.pos)
+        self.rect = self.images[0].get_rect()
         self.hitbox = pygame.FRect(0, 0, 9, 9)
+
+    def set_pos(self, pos):
+        self.pos = pygame.Vector2(pos)
+        self.rect.midbottom = self.pos
         self.hitbox.midbottom = self.pos
 
     def trail_collision_detect(self, trail, trail_step):

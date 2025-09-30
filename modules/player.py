@@ -17,7 +17,7 @@ class Player(Entity):
         # images:list[pygame.Surface] = import_spritesheet("graphics/player", "biby-16x16.png")
         # images = [pygame.transform.rotate(img, 90) for img in images]
 
-        super().__init__(master, grps, images, (100, 100))
+        super().__init__(master, grps, images)
         # self.draw_outline = True
 
         self.master.player = self
@@ -31,13 +31,15 @@ class Player(Entity):
 
         self.turning_speed = 4
 
-        self.color = pygame.Color(0x00FFFFFF)
+        self.max_walls = None
+        self.wall_remaining = None
 
         self.trail_step = 4
         self.trail_height = 8
         self.trail:list[TrailSegment] = []
-        # self.trail_grp = CustomGroup()
+        # self.master.level.trails.append(self.trail)
         self.trail_index = 0
+        self.color = pygame.Color(0x00FFFFFF)
 
         self.trail3d_effect = pygame.Surface((max(self.trail_height, self.trail_step)+1, self.trail_height), pygame.SRCALPHA)
         col = pygame.Color(0x00000000)
@@ -78,7 +80,8 @@ class Player(Entity):
 
         if self.pos.distance_squared_to(self.last_pos) >= self.trail_step**2:
 
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
+            if self.wall_remaining > 0 and pygame.key.get_pressed()[pygame.K_SPACE]:
+                self.wall_remaining -= 1
                 x1, y1 = self.last_pos.xy
                 x2, y2 = self.pos.xy
                 x = min(x1, x2)
@@ -93,7 +96,7 @@ class Player(Entity):
 
                 # self.trail.append((x, y, w, h))
                 trail = TrailSegment(self.screen, self.trail_sprite, x, y, w, h,
-                                     dir, self.trail_index, [self.master.game.ysort_grp])
+                                     dir, self.trail_index, [self.master.level.ysort_grp])
                 self.trail.append(trail)
                 self.trail_index += 1
             self.last_pos = self.pos.copy()
@@ -149,6 +152,7 @@ class Player(Entity):
         # pygame.draw.rect(self.master.debug.surface, "green", self.hitbox, 1)
         self.master.debug("pos:", self.rect.center)
         self.master.debug("trail:", len(self.trail))
+        self.master.debug("walls:", self.wall_remaining)
 
 
 class TrailSegment(pygame.sprite.Sprite):
