@@ -27,31 +27,39 @@ class Biby(Entity):
 
     def move(self):
 
-        # vel_dist = self.vel.length()
-
-        self.vel = self.dir * self.speed
         my_dir = self.dir.copy()
+        avoid_vec = pygame.Vector2()
+        guide_vec = pygame.Vector2()
+        wall_count = 0
+        path_dir = 0
 
         for trail in self.master.player.trail:
             px, py = trail.rect.midbottom
             if (dis_sq := dist_sq(self.pos.xy, (px, py))) <= 64:
-                target_vec = self.pos - (px, py)
-                target_vec.normalize_ip()
-                trail_dir = trail.dir if my_dir.dot(trail.dir) >= 0 else -trail.dir
-                target_vec += trail_dir
-                # target_vec.scale_to_length(0.02)
-                # target_vec = ((8-math.sqrt(dis))/8)*target_vec
-                # self.vel += target_vec
-                self.dir += target_vec
-        self.dir.normalize_ip()
-        # self.vel.clamp_magnitude(vel_dist)
+                wall_count += 1
 
+                target_vec = self.pos - (px, py)
+                target_vec = ((8-math.sqrt(dis_sq))/8)*target_vec
+                avoid_vec += target_vec
+                
+                dot = my_dir.dot(trail.dir)
+                path_dir += sigmoid(dot)
+
+                trail_dir = trail.dir if dot >= 0 else -trail.dir
+                guide_vec += trail_dir * 0.1
+
+        self.dir += avoid_vec + guide_vec
+        consider_guide = wall_count/5 < path_dir
+        if consider_guide:
+            self.dir += guide_vec
+        self.master.debug("guide:", consider_guide)
+
+        self.dir.normalize_ip()
         if self.moving:
             self.vel.move_towards_ip(self.dir*self.speed, self.acc*self.master.dt)
         else:
             self.vel.move_towards_ip((0, 0), self.dcc*self.master.dt)
 
-        # self.vel = self.dir * self.speed
         try:
             self.dir = self.vel.normalize()
         except ValueError:
@@ -65,3 +73,4 @@ class Biby(Entity):
     def update(self):
         
         self.move()
+

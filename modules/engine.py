@@ -78,6 +78,14 @@ def _get_mouse_pos(master) -> tuple[int, int]:
 
     return int(mx/wx * W), int(my/wy * H)
 
+def sigmoid(x:int|float) -> int:
+
+    if x > 0:
+        return 1
+    if x < 0:
+        return -1
+    return 0
+
 class CustomTimer:
 
     def __init__(self, auto_clear=False):
