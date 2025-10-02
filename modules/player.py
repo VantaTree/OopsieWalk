@@ -78,6 +78,10 @@ class Player(Entity):
 
     def record_trail(self):
 
+        if not pygame.key.get_pressed()[pygame.K_SPACE]:
+            if len(self.trail) != 0 and self.trail[0] != None:
+                self.trail.append(None)
+
         if self.pos.distance_squared_to(self.last_pos) >= self.trail_step**2:
 
             if self.wall_remaining > 0 and pygame.key.get_pressed()[pygame.K_SPACE]:
@@ -99,6 +103,7 @@ class Player(Entity):
                                      dir, self.trail_index, [self.master.level.ysort_grp])
                 self.trail.append(trail)
                 self.trail_index += 1
+
             self.last_pos = self.pos.copy()
 
     def move(self):
@@ -147,7 +152,10 @@ class Player(Entity):
 
         self.move()
 
-        self.trail_collision_detect()
+        # for trail in self.master.level.trails:
+        #     self.trail_coll_resolution(trail)
+
+        # self.trail_collision_detect()
         
         # pygame.draw.rect(self.master.debug.surface, "green", self.hitbox, 1)
         self.master.debug("pos:", self.rect.center)

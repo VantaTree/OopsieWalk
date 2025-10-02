@@ -34,6 +34,7 @@ class Biby(Entity):
         path_dir = 0
 
         for trail in self.master.level.trails[0]:
+            if trail is None: continue
             px, py = trail.rect.midbottom
             if (dis_sq := dist_sq(self.pos.xy, (px, py))) <= 64:
                 wall_count += 1
@@ -73,4 +74,6 @@ class Biby(Entity):
     def update(self):
         
         self.move()
+        # for trail in self.master.level.trails:
+        #     self.trail_coll_resolution(trail)
 

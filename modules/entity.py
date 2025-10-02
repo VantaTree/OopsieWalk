@@ -37,6 +37,8 @@ class Entity(pygame.sprite.Sprite):
         colliding = False
         # sorted_sprites:list[TrailSegment] =  sorted(self.trail_grp.sprites(), key=lambda s: s.order)
         for i in range(len(trail)-2):
+            if trail[i] is None or trail[i+1] is None:
+                continue
             x1, y1 = trail[i].rect.midbottom
             x2, y2 = trail[i+1].rect.midbottom
             x3, y3 = self.last_pos.xy
@@ -53,6 +55,41 @@ class Entity(pygame.sprite.Sprite):
                 return (x1+x2)/2, (y1+y2)/2
 
         return None
+    
+    def trail_coll_resolution(self, trail):
+
+        for i in range(len(trail)-2-2):
+
+            if trail[i] is None or trail[i+1] is None:
+                continue
+
+            line_a = pygame.Vector2(trail[i].rect.midbottom)
+            line_b = pygame.Vector2(trail[i+1].rect.midbottom)
+
+            rect_center = Vector2(self.hitbox.center)
+            rect_radius_sq = (Vector2(self.hitbox.width/2, self.hitbox.height/2)).length_squared()
+            wall_mid = (line_a + line_b) / 2
+            wall_radius_sq = ((line_a - line_b) / 2).length_squared()
+
+            if (rect_center - wall_mid).length_squared() > rect_radius_sq + wall_radius_sq:
+                continue
+            
+            pos = self.hitbox.center
+            collided, normal, penetration = rect_vs_line(*pos, *self.hitbox.size, line_a, line_b)
+            if not collided:
+                return
+            
+            # Push rectangle out
+            pos += normal * (penetration + 0.01)
+            
+            # Kill velocity into wall (slide along)
+            vn = self.vel.dot(normal)
+            if vn < 0:
+                self.vel = self.vel - normal * vn
+            
+            self.hitbox.center = pos
+            self.set_pos(self.hitbox.midbottom)
+            return True
     
     def draw(self):
 
@@ -77,6 +114,7 @@ class Entity(pygame.sprite.Sprite):
         self.screen.blit(canvas, (self.pos.x - canvas.get_width()/2, self.pos.y - canvas.get_height() + size/2))
 
         pygame.draw.rect(self.master.debug.surface, "green", (self.pos.x - canvas.get_width()/2, self.pos.y - canvas.get_height() + size/2, *canvas.size), 1)
+        pygame.draw.rect(self.master.debug.surface, (255, 255, 0), self.hitbox, 1)
     
     def update(self):
 

@@ -1,5 +1,6 @@
 import pygame, os
 from .config import *
+from pygame import Vector2, Rect
 
 class CustomGroup(pygame.sprite.Group):
 
@@ -85,6 +86,49 @@ def sigmoid(x:int|float) -> int:
     if x < 0:
         return -1
     return 0
+
+def closest_point_on_segment(p: Vector2, a: Vector2, b: Vector2) -> Vector2:    
+    ab = b - a
+    t = (p - a).dot(ab) / (ab.dot(ab) + 1e-8)
+    t = max(0, min(1, t))
+    return a + ab * t
+
+def rect_vs_line(cx: float, cy: float, w: float, h: float, line_a: Vector2, line_b: Vector2)\
+        -> tuple[bool, Vector2, float]:
+    hw, hh = w / 2, h / 2
+    
+    # 4 corners of rect
+    corners = [
+        Vector2(cx - hw, cy - hh),
+        Vector2(cx + hw, cy - hh),
+        Vector2(cx + hw, cy + hh),
+        Vector2(cx - hw, cy + hh),
+    ]
+    
+    collided = False
+    min_penetration = float("inf")
+    best_normal = Vector2(0, 0)
+    
+    # line segment normal
+    wall = line_b - line_a
+    normal = Vector2(-wall.y, wall.x).normalize() # perpendicular
+    
+    for corner in corners:
+        closest = closest_point_on_segment(corner, line_a, line_b)
+        diff = corner - closest
+        dist = diff.dot(normal)
+        
+        if dist < 0: # penetration
+            pen = -dist
+            if pen < min_penetration:
+                min_penetration = pen
+                best_normal = normal
+            collided = True
+    
+    if collided:
+        return True, best_normal, min_penetration
+    return False, Vector2(0, 0), 0
+
 
 class CustomTimer:
 

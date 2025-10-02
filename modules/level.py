@@ -52,5 +52,9 @@ class Level:
         pass
 
     def update(self):
-        pass
+        
+        for trail in self.trails:
+            for i in range(len(trail)-3):
+                if trail[i] is None or trail[i+1] is None: continue
+                pygame.draw.line(self.master.debug.surface, (255, 0, 0), trail[i].rect.midbottom, trail[i+1].rect.midbottom)
 
