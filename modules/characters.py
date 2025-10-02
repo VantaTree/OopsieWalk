@@ -55,6 +55,29 @@ class Biby(Entity):
             self.dir += guide_vec
         self.master.debug("guide:", consider_guide)
 
+        # attractors
+        for node in self.master.level.attractors:
+            if not node.active: continue
+            if (dis_sq := dist_sq(self.pos.xy, node.pos.xy)) <= (node.radius)**2:
+                target_vec = self.pos - node.pos
+                target_vec *= -1
+                target_vec.normalize_ip()
+                target_vec = ((node.radius-math.sqrt(dis_sq))/node.radius)*target_vec
+                self.dir = self.dir.slerp(target_vec, node.strength)
+                node.engage()
+                pygame.draw.line(self.master.debug.surface, "blue", self.pos, self.pos+(target_vec.normalize())*16)
+
+        # repellers
+        for node in self.master.level.repellers:
+            if not node.active: continue
+            if (dis_sq := dist_sq(self.pos.xy, node.pos.xy)) <= (node.radius)**2:
+                target_vec = self.pos - node.pos
+                target_vec.normalize_ip()
+                target_vec = ((node.radius-math.sqrt(dis_sq))/node.radius)*target_vec
+                self.dir = self.dir.slerp(target_vec, node.strength)
+                node.engage()
+                pygame.draw.line(self.master.debug.surface, "red", self.pos, self.pos+(target_vec.normalize())*16)
+
         self.dir.normalize_ip()
         if self.moving:
             self.vel.move_towards_ip(self.dir*self.speed, self.acc*self.master.dt)
