@@ -6,7 +6,8 @@ if TYPE_CHECKING:
     from .level import Level
     from .player import Player
     from .debug import Debug
-    from ..main import App
+    from .menu import MainMenu, PauseMenu
+    from ..main import App, State
 
 class Master:
 
@@ -17,10 +18,13 @@ class Master:
         self.game:Game
         self.level:Level
         self.player:Player
+        self.main_menu: MainMenu
+        self.pause_menu:PauseMenu
+        self.State:State
 
         self.dt:float = 0
 
-        self.font_big = pygame.Font(size=20)
-        self.font_med = pygame.Font(size=15)
-        self.font_small = pygame.Font(size=10)
+        self.font_big = pygame.Font(size=25)
+        self.font_med = pygame.Font(size=20)
+        self.font_small = pygame.Font(size=15)
 

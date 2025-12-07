@@ -60,6 +60,8 @@ class Level:
 
 
     def draw_bg(self):
+        
+        self.screen.fill("beige")
 
         for node in self.attractors:
             node.draw()

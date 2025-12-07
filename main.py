@@ -1,5 +1,12 @@
 import pygame
 from modules import *
+from enum import Enum
+
+class State(Enum):
+    
+    MAIN_MENU = 0,
+    IN_GAME = 1,
+    PAUSE = 2
 
 class App:
 
@@ -15,11 +22,15 @@ class App:
         pygame.event.set_allowed((pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP,
                 pygame.KEYDOWN, pygame.KEYUP))
         
+        self.state = State.MAIN_MENU
         self.master = Master()
+        self.master.State = State
         self.master.app = self
         self.debug = Debug(self.screen, font=self.master.font_med, offset=4, surf_enabled=True)
         self.master.debug = self.debug
         self.game = Game(self.master)
+        self.main_menu = MainMenu(self.master)
+        self.pause_menu = PauseMenu(self.master)
 
     def run(self):
 
@@ -37,11 +48,20 @@ class App:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     raise SystemExit
+                
+            self.run_states()
 
-            self.screen.fill("beige")
-            self.game.run()
             self.debug.draw()
-
+            
+    def run_states(self):
+        
+        if self.state == State.MAIN_MENU:
+            self.main_menu.run()
+        elif self.state == State.IN_GAME:
+            self.game.run()
+        elif self.state == State.PAUSE:
+            self.pause_menu.run()
+            
 
 if __name__ == "__main__":
     

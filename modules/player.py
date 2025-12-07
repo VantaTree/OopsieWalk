@@ -75,6 +75,14 @@ class Player(Entity):
             self.input_dir.x += 1
 
         self.input = bool(self.input_dir.x or self.input_dir.y)
+        
+    # def process_events(self):
+        
+    #     for event in pygame.event.get((pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP,
+    #             pygame.KEYDOWN, pygame.KEYUP)):
+    #         if event.type == pygame.KEYDOWN:
+    #             if event.key == pygame.K_ESCAPE:
+    #                 self.master.pause_menu.open()
 
     def record_trail(self):
 

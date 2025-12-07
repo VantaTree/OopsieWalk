@@ -49,12 +49,18 @@ class Game:
                 if event.key == pygame.K_f:
                     pygame.display.toggle_fullscreen()
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    raise SystemExit
+                    self.master.pause_menu.open()
                 if event.key == pygame.K_1:
                     self.change_level("01")
                 if event.key == pygame.K_0:
                     self.change_level("test")
+
+    def update(self):
+
+        self.get_input()
+        self.player.update()
+        self.biby.update()
+        self.level.update()
 
     def draw(self):
 
@@ -62,18 +68,7 @@ class Game:
         self.level.draw()
         self.level.draw_fg()
 
-    def update(self):
-
-        self.get_input()
-
-        self.player.update()
-
-        self.biby.update()
-
-        self.level.update()
-
     def run(self):
 
         self.update()
-
         self.draw()
