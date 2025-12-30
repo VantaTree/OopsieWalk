@@ -1,8 +1,9 @@
 import pygame
 from .config import *
-from .engine import CustomGroup, CustomTimer
+from .engine import CustomGroup, CustomTimer, dist_sq
 from .player import TrailSegment
 import json
+from enum import Enum
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -11,6 +12,10 @@ if TYPE_CHECKING:
     from .characters import Biby
 
 class Level:
+    
+    class State(Enum):
+        BUILD = 0,
+        RUN = 1,
     
     def __init__(self, master: "Master", player, biby, map_type):
         
@@ -36,12 +41,18 @@ class Level:
 
         self.attract_radius = 32
         self.repel_radius = 32
+        
+        self.curr_state = self.State.BUILD
 
         self.load_map()
 
     def load_map(self):
         
         self.player.set_pos(self.data["player_pos"])
+        
+        x, y, size = self.data["biby_goal_pos_size"]
+        self.biby_goal_pos = pygame.Vector2(x, y)
+        self.biby_goal_size = size
 
         self.biby.set_pos(self.data["biby_pos"])
         self.biby.dir.update(1, 0)
@@ -50,14 +61,27 @@ class Level:
         self.player.max_walls = self.data["wall_amount"]
         self.player.wall_remaining = self.player.max_walls
 
-        for x, y in self.data["attractors"]:
-            node = GravityNode(self.master, x, y, self.attract_strength, self.attract_radius, 2500, 1)
-            self.attractors.append(node)
+        # for x, y in self.data["attractors"]:
+        #     node = GravityNode(self.master, x, y, self.attract_strength, self.attract_radius, 2500, 1)
+        #     self.attractors.append(node)
 
-        for x, y in self.data["repellers"]:
-            node = GravityNode(self.master, x, y, self.repel_strength, self.repel_radius, 2500, -1)
-            self.repellers.append(node)
+        # for x, y in self.data["repellers"]:
+        #     node = GravityNode(self.master, x, y, self.repel_strength, self.repel_radius, 2500, -1)
+        #     self.repellers.append(node)
 
+    def check_biby_goal(self):
+        
+        if dist_sq(self.biby.pos, self.biby_goal_pos) <= self.biby_goal_size**2:
+            pass
+            self.master.debug("Goal", "")
+            self.master.win_screen.open()
+            # self.master.app.state = self.master.State.WIN
+            # weeeeeeeeeeeee
+            
+    def change_state(self, state):
+        self.curr_state = state
+        self.master.player.change_level_state(self.curr_state)
+        self.master.biby.change_level_state(self.curr_state)
 
     def draw_bg(self):
         
@@ -69,6 +93,9 @@ class Level:
             node.draw()
 
     def draw(self):
+        
+        pygame.draw.circle(self.screen, "gold", self.biby_goal_pos, self.biby_goal_size)
+        
         self.ysort_grp.draw_y_sort(lambda obj: obj.rect.bottom)
 
     def draw_fg(self):
@@ -80,6 +107,8 @@ class Level:
             node.update()
         for node in self.repellers:
             node.update()
+            
+        self.check_biby_goal()
         
         for trail in self.trails:
             for i in range(len(trail)-3):

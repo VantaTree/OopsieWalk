@@ -17,13 +17,21 @@ class Biby(Entity):
         images = [pygame.transform.rotate(img, 90) for img in images]
 
         super().__init__(master, grps, images)
+        self.master.biby = self
+        
         self.draw_outline = True
         self.dir = pygame.Vector2(-1, 0)
 
-        self.moving = True
+        self.moving = False
         self.speed = 0.5
         self.acc = 0.05
         self.dcc = 0.03
+        
+    def change_level_state(self, state):
+        if state == self.master.level.State.BUILD:
+            self.moving = False
+        elif state == self.master.level.State.RUN:
+            self.moving = True
 
     def move(self):
 

@@ -5,8 +5,9 @@ if TYPE_CHECKING:
     from .game import Game
     from .level import Level
     from .player import Player
+    from .characters import Biby
     from .debug import Debug
-    from .menu import MainMenu, PauseMenu
+    from .menu import MainMenu, PauseMenu, LevelMenu, WinScreen, LooseScreen
     from ..main import App, State
 
 class Master:
@@ -18,8 +19,12 @@ class Master:
         self.game:Game
         self.level:Level
         self.player:Player
+        self.biby:Biby
         self.main_menu: MainMenu
+        self.level_menu: LevelMenu
         self.pause_menu:PauseMenu
+        self.win_screen:WinScreen
+        self.loose_screen:LooseScreen
         self.State:State
 
         self.dt:float = 0

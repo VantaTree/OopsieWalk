@@ -5,8 +5,11 @@ from enum import Enum
 class State(Enum):
     
     MAIN_MENU = 0,
-    IN_GAME = 1,
-    PAUSE = 2
+    LEVEL_MENU = 1,
+    IN_GAME = 2,
+    PAUSE = 3,
+    WIN = 4,
+    LOOSE = 5,
 
 class App:
 
@@ -30,7 +33,10 @@ class App:
         self.master.debug = self.debug
         self.game = Game(self.master)
         self.main_menu = MainMenu(self.master)
+        self.level_menu = LevelMenu(self.master)
         self.pause_menu = PauseMenu(self.master)
+        self.win_screen = WinScreen(self.master)
+        self.loose_screen = LooseScreen(self.master)
 
     def run(self):
 
@@ -55,12 +61,20 @@ class App:
             
     def run_states(self):
         
+        self.master.debug("state", self.state)
+        
         if self.state == State.MAIN_MENU:
             self.main_menu.run()
+        elif self.state == State.LEVEL_MENU:
+            self.level_menu.run()
         elif self.state == State.IN_GAME:
             self.game.run()
         elif self.state == State.PAUSE:
             self.pause_menu.run()
+        elif self.state == State.WIN:
+            self.win_screen.run()
+        elif self.state == State.LOOSE:
+            self.loose_screen.run()
             
 
 if __name__ == "__main__":

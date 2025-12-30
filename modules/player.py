@@ -28,6 +28,7 @@ class Player(Entity):
         self.acc = 0.1
         self.dcc = 0.06
         self.moving = False
+        self.in_control = True
 
         self.turning_speed = 4
 
@@ -59,6 +60,12 @@ class Player(Entity):
         # self.trail_sprite_cache:dict[int, pygame.Surface] = {}
         # self.trail_timer = CustomTimer()
         # self.trail_timer.start(100, 0)
+        
+    def change_level_state(self, state):
+        if state == self.master.level.State.BUILD:
+            self.in_control = True
+        elif state == self.master.level.State.RUN:
+            self.in_control = False
 
     def get_input(self):
 
@@ -86,13 +93,13 @@ class Player(Entity):
 
     def record_trail(self):
 
-        if not pygame.key.get_pressed()[pygame.K_SPACE]:
-            if len(self.trail) != 0 and self.trail[0] != None:
+        if not pygame.key.get_pressed()[pygame.K_SPACE] or not self.in_control:
+            if len(self.trail) != 0 and self.trail[-1] != None:
                 self.trail.append(None)
 
         if self.pos.distance_squared_to(self.last_pos) >= self.trail_step**2:
 
-            if self.wall_remaining > 0 and pygame.key.get_pressed()[pygame.K_SPACE]:
+            if self.wall_remaining > 0 and pygame.key.get_pressed()[pygame.K_SPACE] and self.in_control:
                 self.wall_remaining -= 1
                 x1, y1 = self.last_pos.xy
                 x2, y2 = self.pos.xy
@@ -115,11 +122,14 @@ class Player(Entity):
             self.last_pos = self.pos.copy()
 
     def move(self):
-        self.dir.rotate_ip(self.input_dir.x * self.turning_speed * self.master.dt)
+        
+        if self.in_control:
+            self.dir.rotate_ip(self.input_dir.x * self.turning_speed * self.master.dt *\
+                (1 if self.input_dir.y <= 0 else -1))
 
         # self.vel.move_towards_ip(self.dir*self.speed, self.acc*self.master.dt)
-        if self.input_dir.y < 0:
-            self.vel.move_towards_ip(self.dir*self.speed, self.acc*self.master.dt)
+        if self.input_dir.y and self.in_control:
+            self.vel.move_towards_ip(self.dir*self.speed*sigmoid(-self.input_dir.y), self.acc*self.master.dt)
         else:
             self.vel.move_towards_ip((0, 0), self.dcc*self.master.dt)
 

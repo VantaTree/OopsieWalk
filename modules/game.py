@@ -19,8 +19,9 @@ class Game:
         self.player = Player(master, [])
         self.biby = Biby(master, [])
 
-        # self.level = Level(master, self.player, self.biby, "01")
-        self.level = Level(master, self.player, self.biby, "test")
+        # self.map_type = "01"
+        self.map_type = "test"
+        self.level = Level(master, self.player, self.biby, self.map_type)
         self.level.ysort_grp.add(self.player)
         self.level.ysort_grp.add(self.biby)
         self.level.trails.append(self.player.trail)
@@ -36,16 +37,23 @@ class Game:
         # self.player.
         self.biby.vel.update()
 
+        self.map_type = map_type
         self.level = Level(self.master, self.player, self.biby, map_type)
+        self.level.change_state(self.level.State.BUILD)
         self.level.ysort_grp.add(self.player)
         self.level.ysort_grp.add(self.biby)
         self.level.trails.append(self.player.trail)
-
+    
+    def resart_level(self):
+        
+        self.change_level(self.map_type)
 
     def get_input(self):
         
         for event in pygame.event.get((pygame.KEYDOWN)):
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.level.change_state(self.level.State.RUN)
                 if event.key == pygame.K_f:
                     pygame.display.toggle_fullscreen()
                 if event.key == pygame.K_ESCAPE:

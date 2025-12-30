@@ -325,9 +325,10 @@ class MainMenu():
             for i in range(amount):
                 yield start + i*space
         spacer = gen_spacing()
-        Button(self.master, (W//2, H*next(spacer)), 'start', self.buttons, col, col_shadow)
+        # Button(self.master, (W//2, H*next(spacer)), 'start', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'levels', self.buttons, col, col_shadow)
         # Button(self.master, (W//2, H*next(spacer)), 'fullscreen', self.buttons, col, col_shadow)
-        Button(self.master, (W//2, H*next(spacer)), 'settings', self.buttons, col, col_shadow)
+        # Button(self.master, (W//2, H*next(spacer)), 'settings', self.buttons, col, col_shadow)
         Button(self.master, (W//2, H*next(spacer)), 'quit', self.buttons, col, col_shadow)
 
     def update(self):
@@ -342,8 +343,8 @@ class MainMenu():
                         self.master.app.state = self.master.State.IN_GAME
                     # elif action == 'fullscreen':
                     #     pygame.display.toggle_fullscreen()
-                    elif action == 'settings':
-                        self.master.settings_menu.open(bg_color=0)
+                    elif action == 'levels':
+                        self.master.level_menu.open(bg_color=(5, 100, 110))
                     elif action == 'quit':
                         pygame.quit()
                         raise SystemExit
@@ -376,9 +377,9 @@ class PauseMenu():
         self.bg_overlay = pygame.Surface(self.screen.get_size())
         self.bg_overlay.set_alpha(70)
         
-        self.title_surf = self.master.font_big.render("Paused", False, (255, 255, 255))
+        self.title_surf = self.master.font_big.render("Paused", False, (5, 230, 220))
         self.title_rect = self.title_surf.get_rect(midtop=(W/2, H*0.1))
-        self.title_shadow = self.master.font_big.render("Paused", False, (250, 250, 250))
+        self.title_shadow = self.master.font_big.render("Paused", False, (5, 230, 220))
         self.title_shadow.set_alpha(100)
 
         self.buttons:list[Button] = []
@@ -386,8 +387,8 @@ class PauseMenu():
         
     def create_buttons(self):
 
-        col = (250, 250, 250)
-        col_shadow = (185, 198, 194)
+        col = (255, 255, 255)
+        col_shadow = (180, 180, 180)
         def gen_spacing(start=0.36, space=0.12, amount=100):
             for i in range(amount):
                 yield start + i*space
@@ -395,7 +396,8 @@ class PauseMenu():
         Button(self.master, (W//2, H*next(spacer)), 'resume', self.buttons, col, col_shadow)
         # Button(self.master, (W//2, H*next(spacer)), 'fullscreen', self.buttons, col, col_shadow)
         Button(self.master, (W//2, H*next(spacer)), 'restart level', self.buttons, col, col_shadow)
-        Button(self.master, (W//2, H*next(spacer)), 'settings', self.buttons, col, col_shadow)
+        # Button(self.master, (W//2, H*next(spacer)), 'settings', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'main menu', self.buttons, col, col_shadow)
         Button(self.master, (W//2, H*next(spacer)), 'quit', self.buttons, col, col_shadow)
 
     def open(self):
@@ -424,9 +426,12 @@ class PauseMenu():
                     elif action == 'restart level':
                         self.close()
                         # self.master.app.death_screen()
-                        self.master.player.get_hurt()
-                    elif action == 'settings':
-                        self.master.settings_menu.open(bg=self.bg, bg_overlay=self.bg_overlay)
+                        self.master.game.resart_level()
+                    # elif action == 'settings':
+                    #     self.master.settings_menu.open(bg=self.bg, bg_overlay=self.bg_overlay)
+                    
+                    elif action == 'main menu':
+                        self.master.app.state = self.master.State.MAIN_MENU
                     elif action == 'quit':
                         pygame.quit()
                         raise SystemExit
@@ -450,50 +455,41 @@ class PauseMenu():
         self.update()
 
 
-class SettingsMenu:
+class LevelMenu:
 
     def __init__(self, master: "Master"):
         self.master = master
-        self.master.settings_menu = self
+        self.master.level_menu = self
         self.screen = pygame.display.get_surface()
-        self.title_surf = self.master.font_big.render("Settings", False, (235, 10, 5))
+        self.title_surf = self.master.font_big.render("Level Select", False, (5, 230, 220))
         self.title_rect = self.title_surf.get_rect(midtop=(W/2, H*0.1))
-        self.title_shadow = self.master.font_big.render("Settings", False, (255, 20, 25))
+        self.title_shadow = self.master.font_big.render("Level Select", False, (20, 250, 255))
         self.title_shadow.set_alpha(100)
         self.buttons:list[Button] = []
         self.create_buttons()
         
     def create_buttons(self):
 
-        col = (185, 198, 194)
+        col = (255, 255, 255)
+        col_shadow = (180, 180, 180)
         def gen_spacing(start=0.40, space=0.12, amount=100):
             for i in range(amount):
                 yield start + i*space
         spacer = gen_spacing()
-        self.fps_slider = Slider(self.master, (W//2, H*next(spacer)), "fps", self.buttons, 75, max_value=256, color_text=col, default_value=FPS)
-        self.touch_toggle = ToggleButton(self.master, (W//2, H*next(spacer)), "touch controls", self.buttons, 100, True, color_text=col)
-        self.debug_toggle = ToggleButton(self.master, (W//2, H*next(spacer)), "debug info", self.buttons, 100, True, color_text=col)
-        Button(self.master, (W//2, H*next(spacer)), 'fullscreen', self.buttons, col)
-        Button(self.master, (W//2, H*next(spacer)), 'back', self.buttons, col)
+        Button(self.master, (W//2, H*next(spacer)), 'Level test', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'Level 01', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'back', self.buttons, col, col_shadow)
 
     def open(self, *, bg=None, bg_overlay=None, bg_color=None):
 
-        self.prev_state = self.master.app.state
-        self.master.app.state = self.master.State.SETTINGS
+        self.master.app.state = self.master.State.LEVEL_MENU
         self.bg = bg
         self.bg_overlay = bg_overlay
         self.bg_color = bg_color
 
-        self.touch_toggle.value = self.master.game.touch_btns_enabled
-        self.debug_toggle.value = self.master.debug.on
-
     def close(self):
         # self.master.sounds["UI_Select"].play()
-        self.master.app.state = self.prev_state
-        self.master.fps = self.fps_slider.value
-        self.master.game.touch_btns_enabled = self.touch_toggle.value
-        self.master.debug.on = self.debug_toggle.value
-        self.master.app.fingers.clear()
+        self.master.app.state = self.master.State.MAIN_MENU
 
     def update(self):
 
@@ -504,11 +500,14 @@ class SettingsMenu:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                 for button in self.buttons:
                     action = button.interact(event.pos, click=True)
+                    if action is None: continue
                     if action == 'back':
                         self.close()
                         return
-                    elif action == 'fullscreen':
-                        pygame.display.toggle_fullscreen()
+                    elif action.startswith("Level"):
+                        self.master.game.change_level(action.split(" ")[1])
+                        self.master.app.state = self.master.State.IN_GAME
+                        return
 
     def draw(self):
 
@@ -530,3 +529,153 @@ class SettingsMenu:
 
         self.update()
         self.draw()
+
+
+class WinScreen:
+
+    def __init__(self, master: "Master"):
+        self.master = master
+        self.master.win_screen = self
+        self.screen = pygame.display.get_surface()
+        
+        self.bg_overlay = pygame.Surface(self.screen.get_size())
+        self.bg_overlay.set_alpha(70)
+        
+        self.title_surf = self.master.font_big.render("Congratulations", False, "gold")
+        self.title_rect = self.title_surf.get_rect(midtop=(W/2, H*0.1))
+        self.title_shadow = self.master.font_big.render("Congratulations", False, "gold")
+        self.title_shadow.set_alpha(100)
+        self.buttons:list[Button] = []
+        self.create_buttons()
+        
+    def create_buttons(self):
+
+        col = (255, 255, 255)
+        col_shadow = (180, 180, 180)
+        def gen_spacing(start=0.40, space=0.12, amount=100):
+            for i in range(amount):
+                yield start + i*space
+        spacer = gen_spacing()
+        Button(self.master, (W//2, H*next(spacer)), 'levels', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'restart level', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'main menu', self.buttons, col, col_shadow)
+
+    def open(self):
+
+        self.master.app.state = self.master.State.WIN
+        self.bg = pygame.transform.gaussian_blur(self.screen, 5, False)
+
+    def update(self):
+
+        for event in pygame.event.get((pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN)):
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.close()
+                return
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+                for button in self.buttons:
+                    action = button.interact(event.pos, click=True)
+                    if action is None: continue
+                    if action == 'levels':
+                        self.master.app.state = self.master.State.LEVEL_MENU
+                        return
+                    elif action == 'restart level':
+                        self.master.game.resart_level()
+                        self.master.app.state = self.master.State.IN_GAME
+                        return
+                    elif action == 'main menu':
+                        self.master.app.state = self.master.State.MAIN_MENU
+                        return
+
+    def draw(self):
+
+        self.screen.blit(self.bg, (0, 0))
+        self.screen.blit(self.bg_overlay, (0, 0))
+
+        self.screen.blit(self.title_shadow, (self.title_rect.x-2, self.title_rect.y+2))
+        self.screen.blit(self.title_surf, self.title_rect)
+
+        for button in self.buttons:
+            button.draw()
+            button.interact(pygame.mouse.get_pos())
+
+    def run(self):
+
+        self.update()
+        self.draw()
+        
+class LooseScreen:
+
+    def __init__(self, master: "Master"):
+        self.master = master
+        self.master.loose_screen = self
+        self.screen = pygame.display.get_surface()
+        
+        self.bg_overlay = pygame.Surface(self.screen.get_size())
+        self.bg_overlay.set_alpha(70)
+        
+        self.title_surf = self.master.font_big.render("You Loose", False, (235, 10, 5))
+        self.title_rect = self.title_surf.get_rect(midtop=(W/2, H*0.1))
+        self.title_shadow = self.master.font_big.render("You Loose", False, (255, 20, 25))
+        self.title_shadow.set_alpha(100)
+        self.buttons:list[Button] = []
+        self.create_buttons()
+        
+    def create_buttons(self):
+
+        col = (255, 255, 255)
+        col_shadow = (180, 180, 180)
+        def gen_spacing(start=0.40, space=0.12, amount=100):
+            for i in range(amount):
+                yield start + i*space
+        spacer = gen_spacing()
+        Button(self.master, (W//2, H*next(spacer)), 'levels', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'restart level', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'main menu', self.buttons, col, col_shadow)
+
+    def open(self):
+
+        self.master.app.state = self.master.State.LEVEL_MENU
+        self.bg = pygame.transform.gaussian_blur(self.screen, 5, False)
+
+    def update(self):
+
+        for event in pygame.event.get((pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN)):
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.close()
+                return
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+                for button in self.buttons:
+                    action = button.interact(event.pos, click=True)
+                    if action is None: continue
+                    if action == 'levels':
+                        self.master.app.state = self.master.State.LEVEL_MENU
+                        return
+                    elif action == 'restart level':
+                        self.master.game.resart_level()
+                        self.master.app.state = self.master.State.IN_GAME
+                        return
+                    elif action == 'main menu':
+                        self.master.app.state = self.master.State.MAIN_MENU
+                        return
+
+    def draw(self):
+
+        if self.bg is not None:
+            self.screen.blit(self.bg, (0, 0))
+        else:
+            self.screen.fill(self.bg_color)
+        if self.bg_overlay is not None:
+            self.screen.blit(self.bg_overlay, (0, 0))
+
+        self.screen.blit(self.title_shadow, (self.title_rect.x-2, self.title_rect.y+2))
+        self.screen.blit(self.title_surf, self.title_rect)
+
+        for button in self.buttons:
+            button.draw()
+            button.interact(pygame.mouse.get_pos())
+
+    def run(self):
+
+        self.update()
+        self.draw()
+        
