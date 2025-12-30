@@ -2,6 +2,7 @@ import pygame
 from .config import *
 from .engine import *
 from .entity import Entity
+import math
 
 
 from typing import TYPE_CHECKING
@@ -52,10 +53,13 @@ class Player(Entity):
         self.trail_sprite = pygame.Surface(self.trail3d_effect.size)
         self.trail_sprite.fill(self.color)
         self.trail_sprite.blit(self.trail3d_effect)
+        
+        self.trail_shadow = self.trail3d_effect.copy()
 
         self.wall_sprite = pygame.Surface(self.trail3d_effect.size)
         self.wall_sprite.fill(0xAFAFAF)
         self.wall_sprite.blit(self.trail3d_effect)
+        
 
         # self.trail_sprite_cache:dict[int, pygame.Surface] = {}
         # self.trail_timer = CustomTimer()
@@ -112,9 +116,16 @@ class Player(Entity):
                 h = round(h)
 
                 dir = self.pos - self.last_pos
+                
+                # shadow_angle = 180+45
+                # shadow_width = math.sqrt(dist_sq((x1, y1), (x2, y2)))
 
-                # self.trail.append((x, y, w, h))
-                trail = TrailSegment(self.screen, self.trail_sprite, x, y, w, h,
+                # trail_shadow = self.trail_shadow.subsurface((0, 0, shadow_width, h))
+                # trail_shadow = pygame.transform.rotate(trail_shadow, shadow_angle)
+                # trail_shadow = pygame.Surface((abs(x1-x2)+1, abs(y1-y2)+1))
+                trail_shadow = pygame.Surface((4, 1))
+                trail_shadow.set_alpha(30)
+                trail = TrailSegment(self.screen, self.trail_sprite, trail_shadow, x, y, w, h,
                                      dir, self.trail_index, [self.master.level.ysort_grp])
                 self.trail.append(trail)
                 self.trail_index += 1
@@ -183,11 +194,12 @@ class Player(Entity):
 
 class TrailSegment(pygame.sprite.Sprite):
 
-    def __init__(self, screen, image, x, y, w, h, dir, order, grps):
+    def __init__(self, screen, image, shadow_img, x, y, w, h, dir, order, grps):
         
         super().__init__(grps)
         self.screen:pygame.Surface = screen
         self.image:pygame.Surface = image
+        self.shadow_img:pygame.Surface = shadow_img
         self.rect = pygame.Rect(x, y, w, h)
         self.dir:pygame.Vector2 = pygame.Vector2(dir)
         self.order = order
@@ -195,6 +207,14 @@ class TrailSegment(pygame.sprite.Sprite):
         self.deactivated = False
 
     def draw(self):
+        
+        for i in range(4):
+            
+            self.screen.blit(self.shadow_img, (
+                                self.rect.x + i - (self.shadow_img.width-self.rect.w)//2,
+                                self.rect.y+self.rect.h + i
+            ))
 
+        # self.screen.blit(self.shadow_img, (self.rect.x, self.rect.y+self.rect.h-(self.rect.w//2)))
         self.screen.blit(self.image, (self.rect.x, self.rect.y), (0, 0, self.rect.w, self.rect.h))
 

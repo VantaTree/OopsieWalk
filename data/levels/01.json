@@ -7,5 +7,11 @@
     "wall_amount": 120,
     "attractor_amount": 0,
     "repeller_amount": 0,
-    "map_size": [512, 288]
+    "map_size": [512, 288],
+    "hazards": [
+        {
+            "type": "spike",
+            "pos": [10, 118]
+        }
+    ]
 }

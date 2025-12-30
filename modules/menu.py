@@ -634,7 +634,7 @@ class LooseScreen:
 
     def open(self):
 
-        self.master.app.state = self.master.State.LEVEL_MENU
+        self.master.app.state = self.master.State.LOOSE
         self.bg = pygame.transform.gaussian_blur(self.screen, 5, False)
 
     def update(self):

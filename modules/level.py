@@ -2,7 +2,9 @@ import pygame
 from .config import *
 from .engine import CustomGroup, CustomTimer, dist_sq
 from .player import TrailSegment
+from .hazards import Hazard
 import json
+import random
 from enum import Enum
 
 from typing import TYPE_CHECKING
@@ -60,6 +62,11 @@ class Level:
 
         self.player.max_walls = self.data["wall_amount"]
         self.player.wall_remaining = self.player.max_walls
+        
+        self.hazard_grp = CustomGroup()
+        for hazard in self.data["hazards"]:
+            Hazard(self.master, [self.hazard_grp, self.ysort_grp],
+                   hazard["type"], hazard["pos"], random.randint(1, 360))
 
         # for x, y in self.data["attractors"]:
         #     node = GravityNode(self.master, x, y, self.attract_strength, self.attract_radius, 2500, 1)
@@ -108,12 +115,14 @@ class Level:
         for node in self.repellers:
             node.update()
             
+        self.hazard_grp.update()
+            
         self.check_biby_goal()
         
-        for trail in self.trails:
-            for i in range(len(trail)-3):
-                if trail[i] is None or trail[i+1] is None: continue
-                pygame.draw.line(self.master.debug.surface, (255, 0, 0), trail[i].rect.midbottom, trail[i+1].rect.midbottom)
+        # for trail in self.trails:
+        #     for i in range(len(trail)-3):
+        #         if trail[i] is None or trail[i+1] is None: continue
+        #         pygame.draw.line(self.master.debug.surface, (255, 0, 0), trail[i].rect.midbottom, trail[i+1].rect.midbottom)
 
 
 class GravityNode:

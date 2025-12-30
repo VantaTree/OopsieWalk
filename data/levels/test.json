@@ -8,10 +8,14 @@
     "attractor_amount": 9999,
     "repeller_amount": 9999,
     "map_size": [512, 288],
-    "repellers":[
-        [100, 118]
-    ],
-    "attractors":[
-        [100, 180]
+    "hazards": [
+        {
+            "type": "spike",
+            "pos": [100, 118]
+        },
+        {
+            "type": "acid",
+            "pos": [50, 150]
+        }
     ]
 }
