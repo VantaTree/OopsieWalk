@@ -20,7 +20,7 @@ class Game:
         self.biby = Biby(master, [])
 
         # self.map_type = "01"
-        self.map_type = "test"
+        self.map_type = "01"
         self.level = Level(master, self.player, self.biby, self.map_type)
         self.level.ysort_grp.add(self.player)
         self.level.ysort_grp.add(self.biby)
@@ -50,7 +50,7 @@ class Game:
 
     def get_input(self):
         
-        for event in pygame.event.get((pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN)):
+        for event in pygame.event.get((pygame.KEYDOWN)):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.level.change_state(self.level.State.RUN)
@@ -64,10 +64,10 @@ class Game:
                     self.level.place_gravity_node("repeller")
                 if event.key == pygame.K_0:
                     self.change_level("test")
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # Testing purposes
-                if event.button == 1:
-                    print(pygame.mouse.get_pos())
+            # if event.type == pygame.MOUSEBUTTONDOWN:
+            #     # Testing purposes
+            #     if event.button == 1:
+            #         print(pygame.mouse.get_pos())
 
     def update(self):
 
