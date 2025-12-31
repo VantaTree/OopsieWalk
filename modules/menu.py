@@ -567,10 +567,10 @@ class WinScreen:
 
     def update(self):
 
-        for event in pygame.event.get((pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN)):
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.close()
-                return
+        for event in pygame.event.get((pygame.MOUSEBUTTONDOWN)):
+            # if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            #     self.close()
+            #     return
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                 for button in self.buttons:
                     action = button.interact(event.pos, click=True)
@@ -639,10 +639,10 @@ class LooseScreen:
 
     def update(self):
 
-        for event in pygame.event.get((pygame.MOUSEBUTTONDOWN, pygame.KEYDOWN)):
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.close()
-                return
+        for event in pygame.event.get((pygame.MOUSEBUTTONDOWN)):
+            # if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            #     self.close()
+            #     return
             if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                 for button in self.buttons:
                     action = button.interact(event.pos, click=True)

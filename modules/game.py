@@ -50,7 +50,7 @@ class Game:
 
     def get_input(self):
         
-        for event in pygame.event.get((pygame.KEYDOWN)):
+        for event in pygame.event.get((pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN)):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.level.change_state(self.level.State.RUN)
@@ -64,6 +64,10 @@ class Game:
                     self.level.place_gravity_node("repeller")
                 if event.key == pygame.K_0:
                     self.change_level("test")
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Testing purposes
+                if event.button == 1:
+                    print(pygame.mouse.get_pos())
 
     def update(self):
 

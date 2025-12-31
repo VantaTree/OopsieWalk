@@ -55,6 +55,11 @@ class Level:
         x, y, size = self.data["biby_goal_pos_size"]
         self.biby_goal_pos = pygame.Vector2(x, y)
         self.biby_goal_size = size
+        self.goal_sprite = pygame.Surface((self.biby_goal_size*2, self.biby_goal_size*2), pygame.SRCALPHA)
+        pygame.draw.circle(self.goal_sprite, "gold", (self.biby_goal_size, self.biby_goal_size), self.biby_goal_size)
+        for wh_radius in range(4, self.biby_goal_size, 8):
+            pygame.draw.circle(self.goal_sprite, "white", (self.biby_goal_size, self.biby_goal_size), wh_radius, 4)
+            
 
         self.biby.set_pos(self.data["biby_pos"])
         self.biby.dir.update(1, 0)
@@ -111,6 +116,8 @@ class Level:
     def draw_bg(self):
         
         self.screen.fill("beige")
+        
+        self.screen.blit(self.goal_sprite, self.biby_goal_pos-(self.biby_goal_size, self.biby_goal_size))
 
         for node in self.attractors:
             node.draw()
@@ -118,8 +125,6 @@ class Level:
             node.draw()
 
     def draw(self):
-        
-        pygame.draw.circle(self.screen, "gold", self.biby_goal_pos, self.biby_goal_size)
         
         self.ysort_grp.draw_y_sort(lambda obj: obj.rect.bottom)
 

@@ -23,6 +23,7 @@ class Biby(Entity):
         self.dir = pygame.Vector2(-1, 0)
 
         self.moving = False
+        self.active = False
         self.speed = 0.5
         self.acc = 0.05
         self.dcc = 0.03
@@ -30,10 +31,14 @@ class Biby(Entity):
     def change_level_state(self, state):
         if state == self.master.level.State.BUILD:
             self.moving = False
+            self.active = False
         elif state == self.master.level.State.RUN:
             self.moving = True
+            self.active = True
 
     def move(self):
+        
+        if not self.active: return
 
         my_dir = self.dir.copy()
         avoid_vec = pygame.Vector2()
