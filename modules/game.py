@@ -59,7 +59,9 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.master.pause_menu.open()
                 if event.key == pygame.K_1:
-                    self.change_level("01")
+                    self.level.place_gravity_node("attractor")
+                if event.key == pygame.K_2:
+                    self.level.place_gravity_node("repeller")
                 if event.key == pygame.K_0:
                     self.change_level("test")
 

@@ -7,7 +7,7 @@ import json
 import random
 from enum import Enum
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from .master import Master
     from .player import Player
@@ -63,6 +63,9 @@ class Level:
         self.player.max_walls = self.data["wall_amount"]
         self.player.wall_remaining = self.player.max_walls
         
+        self.attractor_amount = self.data["attractor_amount"]
+        self.repeller_amount = self.data["repeller_amount"]
+        
         self.hazard_grp = CustomGroup()
         for hazard in self.data["hazards"]:
             Hazard(self.master, [self.hazard_grp, self.ysort_grp],
@@ -84,6 +87,21 @@ class Level:
             self.master.win_screen.open()
             # self.master.app.state = self.master.State.WIN
             # weeeeeeeeeeeee
+            
+    def place_gravity_node(self, type:Literal["attractor", "repeller"]):
+        
+        if not self.player.in_control: return
+        
+        x, y = self.player.pos
+        if type == "attractor" and self.attractor_amount > 0:
+            self.attractor_amount -= 1
+            node = GravityNode(self.master, x, y, self.attract_strength, self.attract_radius, 2500, 1)
+            self.attractors.append(node)
+                
+        elif type == "repeller" and self.repeller_amount > 0:
+            self.repeller_amount -= 1
+            node = node = GravityNode(self.master, x, y, self.repel_strength, self.repel_radius, 2500, -1)
+            self.repellers.append(node)
             
     def change_state(self, state):
         self.curr_state = state
@@ -127,7 +145,7 @@ class Level:
 
 class GravityNode:
 
-    def __init__(self, master, x, y, strength, radius, duration, multiplier):
+    def __init__(self, master:"Master", x, y, strength, radius, duration, multiplier):
 
         self.master = master
         self.screen:pygame.Surface = self.master.app.screen
@@ -141,6 +159,8 @@ class GravityNode:
         self.active_timer = CustomTimer()
 
     def engage(self):
+        if self.master.level.curr_state != self.master.level.State.RUN:
+            return
         if self.active and not self.active_timer.running:
             self.active_timer.start(self.duration)
 
