@@ -9,7 +9,7 @@ You can guide the robot by placing walls and placing gravity nodes that attract 
 Make sure to not let the Biby robot close to any of the hazards.
 If you find yourself in a difficult position you can pause the game and restart the level.
 
-#### Controls:
+**Controls:**
 
 * WASD | Arrow Keys -> Move player Character
 * Space -> Place walls when holding it
@@ -18,7 +18,7 @@ If you find yourself in a difficult position you can pause the game and restart 
 * Enter -> Start Biby Robot (you cannot move after this)
 * Escape -> Pause / Unpause
 
-#### Working:
+**Working:**
 
 The game is made in pygame, it is built on a custom engine I made, it includes spritesheet loading, timers, menus, etc.
 
@@ -33,7 +33,7 @@ The `Game` and `Level` classes manage all the aspect of the game, including the 
 The `Debug` class is a handy tool to display debug text and debug surfaces like collision boxes, vectors etc.
 
 
-#### How to run:
+**How to run:**
 
 1. Make sure python 3.10+ is installed
 2. Close this repoitory `git clone https://github.com/VantaTree/OopsieWalk.git`
