@@ -1,0 +1,13 @@
+{
+    "name":"Where am I?",
+    "map_size": [512, 288],
+    "player_pos": [100, 100],
+    "biby_pos": [250, 144],
+    "biby_goal_pos_size": [315, 144, 32],
+    "biby_angle": 90,
+    "wall_amount": 0,
+    "attractor_amount": 1,
+    "repeller_amount": 1,
+    "hazards": [
+    ]
+}

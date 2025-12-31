@@ -45,6 +45,10 @@ class Level:
         self.repel_radius = 32
         
         self.curr_state = self.State.BUILD
+        
+        self.wall_ui = pygame.image.load("graphics/ui/wall.png").convert()
+        self.attractor_ui = pygame.image.load("graphics/ui/attractor.png").convert_alpha()
+        self.repeller_ui = pygame.image.load("graphics/ui/repeller.png").convert_alpha()
 
         self.load_map()
 
@@ -93,6 +97,11 @@ class Level:
             # self.master.app.state = self.master.State.WIN
             # weeeeeeeeeeeee
             
+    def outof_bounds_biby(self):
+        
+        if not (-50 < self.biby.pos.x < W+50) or not (-50 < self.biby.pos.y < H+50):
+            self.master.loose_screen.open()
+            
     def place_gravity_node(self, type:Literal["attractor", "repeller"]):
         
         if not self.player.in_control: return
@@ -129,7 +138,19 @@ class Level:
         self.ysort_grp.draw_y_sort(lambda obj: obj.rect.bottom)
 
     def draw_fg(self):
-        pass
+        
+        # draw UI
+        text = self.master.font_med.render(str(self.player.wall_remaining), False, 0x0)
+        self.screen.blit(self.wall_ui, (10, H-24))
+        self.screen.blit(text, (10+14, H-24+1))
+        
+        text = self.master.font_med.render(str(self.attractor_amount), False, 0x0)
+        self.screen.blit(self.attractor_ui, (60, H-24))
+        self.screen.blit(text, (60+21, H-24+1))
+        
+        text = self.master.font_med.render(str(self.repeller_amount), False, 0x0)
+        self.screen.blit(self.repeller_ui, (110, H-24))
+        self.screen.blit(text, (120+21, H-24+1))
 
     def update(self):
 
@@ -141,6 +162,7 @@ class Level:
         self.hazard_grp.update()
             
         self.check_biby_goal()
+        self.outof_bounds_biby()
         
         # for trail in self.trails:
         #     for i in range(len(trail)-3):

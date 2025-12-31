@@ -30,6 +30,7 @@ class App:
         self.master.State = State
         self.master.app = self
         self.debug = Debug(self.screen, font=self.master.font_med, offset=4, surf_enabled=True)
+        self.debug.on = False
         self.master.debug = self.debug
         self.game = Game(self.master)
         self.main_menu = MainMenu(self.master)

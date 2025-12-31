@@ -1,0 +1,27 @@
+{
+    "name":"Where am I?",
+    "map_size": [512, 288],
+    "player_pos": [100, 110],
+    "biby_pos": [100, 144],
+    "biby_goal_pos_size": [412, 144, 32],
+    "biby_angle": 0,
+    "wall_amount": 256,
+    "attractor_amount": 1,
+    "repeller_amount": 1,
+    "hazards": [
+        {"type": "acid", "pos": [118, 181]},
+        {"type": "acid", "pos": [188, 147]},
+        {"type": "acid", "pos": [148, 107]},
+        {"type": "acid", "pos": [270, 90]},
+        {"type": "acid", "pos": [245, 117]},
+        {"type": "acid", "pos": [372, 129]},
+        {"type": "acid", "pos": [354, 172]},
+        {"type": "acid", "pos": [377, 220]},
+        {"type": "acid", "pos": [296, 206]},
+        {"type": "acid", "pos": [233, 201]},
+        {"type": "acid", "pos": [283, 125]},
+        {"type": "acid", "pos": [157, 70]},
+        {"type": "acid", "pos": [362, 98]},
+        {"type": "acid", "pos": [213, 130]}
+    ]
+}

@@ -1,14 +1,16 @@
 {
     "name":"Where am I?",
     "map_size": [512, 288],
-    "player_pos": [50, 144],
+    "player_pos": [100, 110],
     "biby_pos": [100, 144],
     "biby_goal_pos_size": [412, 144, 32],
     "biby_angle": 0,
     "wall_amount": 60,
-    "attractor_amount": 0,
-    "repeller_amount": 0,
+    "attractor_amount": 1,
+    "repeller_amount": 1,
     "hazards": [
+        { "type": "spike", "pos": [232, 144] },
+
         { "type": "spike", "pos": [100, 90] },
         { "type": "spike", "pos": [120, 90] },
         { "type": "spike", "pos": [140, 90] },

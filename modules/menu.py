@@ -475,9 +475,12 @@ class LevelMenu:
         def gen_spacing(start=0.40, space=0.12, amount=100):
             for i in range(amount):
                 yield start + i*space
-        spacer = gen_spacing()
-        Button(self.master, (W//2, H*next(spacer)), 'Level test', self.buttons, col, col_shadow)
+        spacer = gen_spacing(space=0.1)
+        # Button(self.master, (W//2, H*next(spacer)), 'Level test', self.buttons, col, col_shadow)
         Button(self.master, (W//2, H*next(spacer)), 'Level 01', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'Level 02', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'Level 03', self.buttons, col, col_shadow)
+        Button(self.master, (W//2, H*next(spacer)), 'Level 04', self.buttons, col, col_shadow)
         Button(self.master, (W//2, H*next(spacer)), 'back', self.buttons, col, col_shadow)
 
     def open(self, *, bg=None, bg_overlay=None, bg_color=None):
