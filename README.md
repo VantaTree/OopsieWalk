@@ -1,7 +1,5 @@
 # Oopsie Walk
 
-#### Video Demo:  https://youtu.be/AHPfh8V_DP4
-
 #### Description:
 
 You are a sentient motorcycle, your task is to guide a robot called BiBy towards the target for each level.
